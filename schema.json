@@ -16,5 +16,11 @@
     "type": "string",
     "default": "08:00",
     "hint": "自动推送时间（格式 HH:MM）"
+  },
+  "push_targets": {
+    "name": "推送目标会话",
+    "type": "string[]",
+    "default": [],
+    "hint": "推送的目标会话列表，格式如 qq:gm:427674145（群聊）或 qq:dm:123456（私聊），多个用逗号分隔"
   }
 }
