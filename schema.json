@@ -2,7 +2,7 @@
   "max_items": {
     "name": "显示条数",
     "type": "integer",
-    "default": 15,
+    "default": 10,
     "hint": "每次显示的热搜条数（1-30）"
   },
   "enable_auto_push": {
