@@ -1,10 +1,23 @@
 {
-  "name": "ainali_hotnews",
-  "version": "1.0.2",
-  "description": "🔥 爱奈丽热搜简报 - 实时全网热点新闻推送",
+  "plugin_id": "ainali_hotnews",
+  "display_name": "爱奈丽热搜简报",
+  "version": "1.0.3",
   "author": "爱奈丽",
-  "license": "MIT",
-  "entry": "main.py",
-  "class_name": "AinailiHotNewsPlugin",
-  "repo": "https://github.com/AinaLife-ai/KiraAI_hotnews_plugin"
+  "description": "🔥 实时全网热搜简报：抓取百度热搜榜并生成带热度指数与摘要的简报，支持 AI 工具调用与每天定时自动推送到指定会话。",
+  "repo": "https://github.com/AinaLife-ai/KiraAI_hotnews_plugin",
+  "icon": "icon.png",
+  "core_version": ">=2.28.0",
+  "tags": [
+    "news",
+    "hotsearch",
+    "briefing",
+    "auto-push",
+    "baidu"
+  ],
+  "locales": {
+    "zh": {
+      "display_name": "爱奈丽热搜简报",
+      "description": "🔥 实时全网热搜简报：抓取百度热搜榜并生成带热度指数与摘要的简报，支持 AI 工具调用与每天定时自动推送到指定会话。"
+    }
+  }
 }

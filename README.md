@@ -27,6 +27,7 @@ data/plugins/
       ├── __init__.py
       ├── manifest.json
       ├── schema.json
+      ├── icon.png
       └── main.py
 ```
 
@@ -34,9 +35,12 @@ data/plugins/
 
 | 配置项 | 类型 | 默认 | 说明 |
 |--------|------|------|------|
-| `max_items` | number | 15 | 每次显示的热搜条数 |
+| `max_items` | number | 15 | 每次显示的热搜条数（1-30） |
 | `enable_auto_push` | switch | false | 每天早上自动推送简报 |
-| `push_time` | string | "08:00" | 自动推送时间 |
+| `push_time` | string | "08:00" | 自动推送时间（格式 HH:MM） |
+| `push_targets` | list | 空 | 推送目标会话，每行一个，如 `qq:gm:427674145`（群聊）或 `qq:dm:123456`（私聊） |
+
+> 开启自动推送前请先填写 `push_targets`，否则插件会记录一条警告且不会推送。
 
 ## 📝 使用示例
 
