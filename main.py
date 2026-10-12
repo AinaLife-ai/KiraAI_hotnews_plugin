@@ -79,9 +79,12 @@ class AinailiHotNewsPlugin(BasePlugin):
         2.x：适配器 message_types 属性（3.0 上它是 deprecated 兼容别名，能跑但刷告警）。
         """
         try:
+            from core.adapter import IMCapability  # 仅 3.0 能力架构存在（2.x 无此符号）
+        except ImportError:
+            IMCapability = None
+        try:
             get_cap = getattr(adapter, "get_capability", None)
-            if get_cap is not None:
-                from core.adapter import IMCapability  # 仅 3.0 能力架构存在
+            if IMCapability is not None and get_cap is not None:
                 im = get_cap(IMCapability)
                 if im is not None:
                     meta = im.get_message_metadata()
