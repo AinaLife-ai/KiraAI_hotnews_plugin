@@ -2,6 +2,13 @@
 
 > 数字生命的每日热点速递 —— 每天早上，知道世界发生了什么
 
+## 兼容性
+
+支持 KiraAI 2.x 与 3.0 全系列（含 v3.0.0-rc.1；特征识别，不绑版本号）。
+v1.0.2：主动推送的事件构造改用 3.0 的 `supported_elements` 字段名（2.x 仍用 `message_types`，
+构造签名按框架实测自动分流）；元素清单优先读 3.0 的 `IMCapability.get_message_metadata()`，
+回退旧版 `message_types` 属性（不再触发 deprecated 告警）。
+
 ## ✨ 功能
 
 | 工具名 | 说明 |

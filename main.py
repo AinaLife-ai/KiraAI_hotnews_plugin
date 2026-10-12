@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import time
 import requests
 import json
@@ -71,6 +72,37 @@ class AinailiHotNewsPlugin(BasePlugin):
                 logger.error(f"定时推送任务异常: {e}")
                 await asyncio.sleep(60)
 
+    async def _adapter_elements(self, adapter) -> list:
+        """取适配器可输出元素清单（双世代，特征识别不绑版本号）。
+
+        3.0：IMCapability.get_message_metadata().supported_elements；
+        2.x：适配器 message_types 属性（3.0 上它是 deprecated 兼容别名，能跑但刷告警）。
+        """
+        try:
+            get_cap = getattr(adapter, "get_capability", None)
+            if get_cap is not None:
+                from core.adapter import IMCapability  # 仅 3.0 能力架构存在
+                im = get_cap(IMCapability)
+                if im is not None:
+                    meta = im.get_message_metadata()
+                    meta = await meta if inspect.isawaitable(meta) else meta
+                    elems = getattr(meta, "supported_elements", None)
+                    if elems is not None:
+                        return list(elems)
+        except Exception:
+            pass
+        return list(getattr(adapter, "message_types", []) or [])
+
+    async def _make_event(self, adapter, msg, ts) -> KiraMessageEvent:
+        """构造消息事件：3.0 用 supported_elements 字段名，2.x 用 message_types。"""
+        elements = await self._adapter_elements(adapter)
+        try:
+            params = set(inspect.signature(KiraMessageEvent.__init__).parameters)
+        except Exception:
+            params = {"message_types"}
+        kw = ({"supported_elements": elements} if "supported_elements" in params else {"message_types": elements})
+        return KiraMessageEvent(adapter=adapter.info, message=msg, timestamp=ts, **kw)
+
     async def _push_to_all(self, content: str):
         """向所有配置的目标会话推送消息（构造主动触发事件，让AI处理并回复）"""
         prefix = "【系统定时任务】请把以下热搜播报给群友们：\n\n"
@@ -111,12 +143,7 @@ class AinailiHotNewsPlugin(BasePlugin):
                 msg.message_str = full_content
                 msg.message_repr = " ".join(ele.repr for ele in chain)
 
-                event = KiraMessageEvent(
-                    adapter=ada.info,
-                    message_types=ada.message_types,
-                    message=msg,
-                    timestamp=cur_time,
-                )
+                event = await self._make_event(ada, msg, cur_time)
                 # 强制触发AI处理，不走discard
                 event.trigger(force=True)
 
